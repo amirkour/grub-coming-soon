@@ -1,4 +1,10 @@
-grub-coming-soon
-================
+#grub-coming-soon
 
-Comming-soon page for grubalub.com!
+##watching with compass
+
+from the root folder of the project
+```
+compass watch -c ./app/config.compass.rb
+```
+
+
