@@ -1,4 +1,88 @@
+@import "compass";
+@import "partials/variables";
+@import "partials/fonts";
+@import "partials/normalize";
+
 body{
-	font-size:3em;
-	font-weight:bold;
+	background-color:$background-color;
+}
+img{
+	max-width: 100%;
+}
+div#everything{
+	width: 100% - $gutter;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:$gutter/4;
+}
+
+.fadeLeft{
+	position:absolute;
+	width:$fade-width;
+	left:$gutter/2;
+	top:0px;
+	height:100%;
+	@include background(linear-gradient(right, 
+										rgba($background-color,0.0), 
+										rgba($background-color,1.0)));
+}
+.fadeRight{
+	position:absolute;
+	width:$fade-width;
+	right:$gutter/2;
+	top:0px;
+	height:100%;
+	@include background(linear-gradient(left, 
+										rgba($background-color,0.0), 
+										rgba($background-color,1.0)));
+}
+div#header{
+	max-height:393px;
+	position:relative;/*hi*/
+	width:100%;
+	text-align:center;
+	#headerLeft{
+		@include background(image-url('grub_xs_left.jpeg'),
+							repeat-x);
+		height:100%;
+		max-height:393px;
+		width:50%;
+		position:absolute;
+		top:0px;
+		left:0px;
+		z-index:-1;
+	}
+	#headerRight{
+		background-image:image-url('grub_xs_right.jpeg');
+		background-repeat: repeat-x;
+		height:100%;
+		max-height:393px;
+		width:50%;
+		position:absolute;
+		top:0px;
+		right:0px;
+		z-index:-1;
+	}
+	.title{
+		//@include text-shadow(0 3px 0 hsla(0,0%,0%,0.75));
+		@include text-shadow(2px 2px 2px rgba($black,0.75));
+		position:absolute;
+		bottom:-2px;
+		width:100%;
+		text-align:center;
+		font-family: '20_dbregular';
+		color: darken($white,20%);
+		background-color: rgba(#334761,0.6);
+		font-size:1.5em;
+		span{
+			display:block;
+		}
+	}
+}
+// #body{
+// 	height:500px;
+// 	background-color: rgba(#475463, 0.98);
+// }
+.step{
+	width:30%;
 }
