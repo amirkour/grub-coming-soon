@@ -341,49 +341,43 @@ img {
 
 /* line 12, ../../app/sass/styles.scss */
 div#everything {
-  width: 92%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 2%;
+  width: 100%;
 }
 
-/* line 19, ../../app/sass/styles.scss */
-.fadeLeft {
+/* line 16, ../../app/sass/styles.scss */
+div#header {
+  max-height: 393px;
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+/* line 22, ../../app/sass/styles.scss */
+div#header .fadeLeft {
   position: absolute;
   width: 10%;
-  left: 4%;
-  top: 0px;
+  left: 0px;
   height: 100%;
   background: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, rgba(227, 227, 225, 0)), color-stop(100%, #e3e3e1));
   background: -webkit-linear-gradient(right, rgba(227, 227, 225, 0), #e3e3e1);
   background: -moz-linear-gradient(right, rgba(227, 227, 225, 0), #e3e3e1);
   background: -o-linear-gradient(right, rgba(227, 227, 225, 0), #e3e3e1);
   background: linear-gradient(right, rgba(227, 227, 225, 0), #e3e3e1);
+  z-index: 100;
 }
-
-/* line 29, ../../app/sass/styles.scss */
-.fadeRight {
+/* line 32, ../../app/sass/styles.scss */
+div#header .fadeRight {
   position: absolute;
   width: 10%;
-  right: 4%;
-  top: 0px;
+  right: 0px;
   height: 100%;
   background: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, rgba(227, 227, 225, 0)), color-stop(100%, #e3e3e1));
   background: -webkit-linear-gradient(left, rgba(227, 227, 225, 0), #e3e3e1);
   background: -moz-linear-gradient(left, rgba(227, 227, 225, 0), #e3e3e1);
   background: -o-linear-gradient(left, rgba(227, 227, 225, 0), #e3e3e1);
   background: linear-gradient(left, rgba(227, 227, 225, 0), #e3e3e1);
+  z-index: 100;
 }
-
-/* line 39, ../../app/sass/styles.scss */
-div#header {
-  max-height: 393px;
-  position: relative;
-  /*hi*/
-  width: 100%;
-  text-align: center;
-}
-/* line 44, ../../app/sass/styles.scss */
+/* line 42, ../../app/sass/styles.scss */
 div#header #headerLeft {
   background: url('../img/grub_xs_left.jpeg?1383539220'), repeat-x;
   height: 100%;
@@ -394,7 +388,7 @@ div#header #headerLeft {
   left: 0px;
   z-index: -1;
 }
-/* line 55, ../../app/sass/styles.scss */
+/* line 53, ../../app/sass/styles.scss */
 div#header #headerRight {
   background-image: url('../img/grub_xs_right.jpeg?1383539220');
   background-repeat: repeat-x;
@@ -406,7 +400,7 @@ div#header #headerRight {
   right: 0px;
   z-index: -1;
 }
-/* line 66, ../../app/sass/styles.scss */
+/* line 64, ../../app/sass/styles.scss */
 div#header .title {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.75);
   position: absolute;
@@ -418,12 +412,7 @@ div#header .title {
   background-color: rgba(51, 71, 97, 0.6);
   font-size: 1.5em;
 }
-/* line 77, ../../app/sass/styles.scss */
+/* line 75, ../../app/sass/styles.scss */
 div#header .title span {
   display: block;
-}
-
-/* line 86, ../../app/sass/styles.scss */
-.step {
-  width: 30%;
 }
