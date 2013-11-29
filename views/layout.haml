@@ -14,16 +14,15 @@
 				%i.icon-menu
 			.nav
 				%ul
-					%li menu one
-					%li menu two
-					%li menu FOO!
+					%li
+						%a{:href=>""} Admin Login
 		#everything
 			=yield
 
 			:javascript
 				(function($){
 					var $all_nav_elements=$("#everything, .nav, .nav-bar");
-					$(".icon-menu").click(function(e){
+					$(".nav-toggle").click(function(e){
 						$all_nav_elements.toggleClass("nav-open");
 					});
 				})(jQuery);
