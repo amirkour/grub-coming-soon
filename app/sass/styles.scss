@@ -9,8 +9,59 @@ body{
 img{
 	max-width: 100%;
 }
-div#everything{
-	width: 100%
+
+.container{
+	margin:10px;
+}
+
+.nav-bar{
+	@media screen and (max-width:$tablet-width){
+		position:relative;
+	}
+
+	.nav-toggle{
+		display:none;
+		@media screen and (max-width:$tablet-width){display:block;}
+
+		margin-left:5px;
+		margin-top:$nav-height/2;
+		margin-bottom:$nav-height/2;
+		.icon-menu{
+			padding:10px;
+			@include border-radius(10px);
+			&:hover{background-color:$grub-grey;}
+		}
+	}
+	.nav{
+		@media screen and (max-width:$tablet-width){
+			position:fixed;
+			top:0px;
+			left:-$nav-width;
+			background-color:$grub-grey;
+			width:$nav-width;
+		}
+		ul{
+			padding:0px;
+			li{
+				display:inline-block;
+				@media screen and (max-width:$tablet-width){display:block;}
+			}
+		}
+	}
+	.nav.nav-open{
+		left:0px;
+	}
+}
+.nav-bar.nav-open{
+	left:$nav-width;
+}
+
+#everything{
+	width: 100%;
+}
+#everything.nav-open{
+	position:relative;
+	left:$nav-width;
 }
 
 div#header{

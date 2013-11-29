@@ -19,3 +19,6 @@ doc/
 
 # sass junks
 .sass-cache/
+
+# i don't even know where this is coming from
+.DS_Store

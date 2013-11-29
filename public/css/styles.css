@@ -339,19 +339,96 @@ img {
   max-width: 100%;
 }
 
-/* line 12, ../../app/sass/styles.scss */
-div#everything {
+/* line 13, ../../app/sass/styles.scss */
+.container {
+  margin: 10px;
+}
+
+@media screen and (max-width: 760px) {
+  /* line 17, ../../app/sass/styles.scss */
+  .nav-bar {
+    position: relative;
+  }
+}
+/* line 22, ../../app/sass/styles.scss */
+.nav-bar .nav-toggle {
+  display: none;
+  margin-left: 5px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+@media screen and (max-width: 760px) {
+  /* line 22, ../../app/sass/styles.scss */
+  .nav-bar .nav-toggle {
+    display: block;
+  }
+}
+/* line 29, ../../app/sass/styles.scss */
+.nav-bar .nav-toggle .icon-menu {
+  padding: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+}
+/* line 32, ../../app/sass/styles.scss */
+.nav-bar .nav-toggle .icon-menu:hover {
+  background-color: #577391;
+}
+@media screen and (max-width: 760px) {
+  /* line 35, ../../app/sass/styles.scss */
+  .nav-bar .nav {
+    position: fixed;
+    top: 0px;
+    left: -200px;
+    background-color: #577391;
+    width: 200px;
+  }
+}
+/* line 43, ../../app/sass/styles.scss */
+.nav-bar .nav ul {
+  padding: 0px;
+}
+/* line 45, ../../app/sass/styles.scss */
+.nav-bar .nav ul li {
+  display: inline-block;
+}
+@media screen and (max-width: 760px) {
+  /* line 45, ../../app/sass/styles.scss */
+  .nav-bar .nav ul li {
+    display: block;
+  }
+}
+/* line 51, ../../app/sass/styles.scss */
+.nav-bar .nav.nav-open {
+  left: 0px;
+}
+
+/* line 55, ../../app/sass/styles.scss */
+.nav-bar.nav-open {
+  left: 200px;
+}
+
+/* line 59, ../../app/sass/styles.scss */
+#everything {
   width: 100%;
 }
 
-/* line 16, ../../app/sass/styles.scss */
+/* line 62, ../../app/sass/styles.scss */
+#everything.nav-open {
+  position: relative;
+  left: 200px;
+}
+
+/* line 67, ../../app/sass/styles.scss */
 div#header {
   max-height: 393px;
   position: relative;
   width: 100%;
   text-align: center;
 }
-/* line 22, ../../app/sass/styles.scss */
+/* line 73, ../../app/sass/styles.scss */
 div#header .fadeLeft {
   position: absolute;
   width: 10%;
@@ -364,7 +441,7 @@ div#header .fadeLeft {
   background: linear-gradient(right, rgba(227, 227, 225, 0), #e3e3e1);
   z-index: 100;
 }
-/* line 32, ../../app/sass/styles.scss */
+/* line 83, ../../app/sass/styles.scss */
 div#header .fadeRight {
   position: absolute;
   width: 10%;
@@ -377,7 +454,7 @@ div#header .fadeRight {
   background: linear-gradient(left, rgba(227, 227, 225, 0), #e3e3e1);
   z-index: 100;
 }
-/* line 42, ../../app/sass/styles.scss */
+/* line 93, ../../app/sass/styles.scss */
 div#header #headerLeft {
   background: url('../img/grub_xs_left.jpeg?1383539220'), repeat-x;
   height: 100%;
@@ -388,7 +465,7 @@ div#header #headerLeft {
   left: 0px;
   z-index: -1;
 }
-/* line 53, ../../app/sass/styles.scss */
+/* line 104, ../../app/sass/styles.scss */
 div#header #headerRight {
   background-image: url('../img/grub_xs_right.jpeg?1383539220');
   background-repeat: repeat-x;
@@ -400,7 +477,7 @@ div#header #headerRight {
   right: 0px;
   z-index: -1;
 }
-/* line 64, ../../app/sass/styles.scss */
+/* line 115, ../../app/sass/styles.scss */
 div#header .title {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.75);
   position: absolute;
@@ -412,7 +489,7 @@ div#header .title {
   background-color: rgba(51, 71, 97, 0.6);
   font-size: 1.5em;
 }
-/* line 75, ../../app/sass/styles.scss */
+/* line 126, ../../app/sass/styles.scss */
 div#header .title span {
   display: block;
 }
