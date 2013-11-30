@@ -123,6 +123,7 @@ class Grubalub < Sinatra::Base
 	end
 
 	get "/" do
+		puts "is debugging working?"
 		haml :index
 	end
 end
