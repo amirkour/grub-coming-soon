@@ -3,6 +3,8 @@
 -if settings.development?
 	%form{:method=>"get", :action=>"#{url('/auth/developer')}"}
 		%button{:type=>"submit"} ... in dev mode!
+-else
+	%form{:method=>"get",:action=>"#{url('/auth/google_oauth2')}"}
+		%button{:type=>"submit"} ... with Google
 
-%form{:method=>"get",:action=>"#{url('/auth/google_oauth2')}"}
-	%button{:type=>"submit"} ... with Google
+%a{:href=>"/"} Back to homepage

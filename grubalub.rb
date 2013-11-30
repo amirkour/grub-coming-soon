@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.setup(:default)
+require 'uri'
 require 'haml'
 require 'json'
 require 'sinatra/json'
@@ -8,6 +9,16 @@ require 'sinatra/reloader'
 require 'sinatra/multi_route'
 require 'omniauth'
 require 'omniauth-google-oauth2'
+require 'mongooz'
+
+class Users<Mongooz::MongoozHash
+	property :email
+	property :name
+	property :roll
+	def is_admin?
+		self.roll=="admin"
+	end
+end
 
 class Grubalub < Sinatra::Base
 	set :app_file, __FILE__
@@ -22,6 +33,8 @@ class Grubalub < Sinatra::Base
         end
         set :show_exceptions, false
 
+        Mongooz.defaults :db=>"grubalub"
+
         # including this in dev causes omniauth failures to hit your failure
         # route.  otherwise, omniauth failures will throw an exception in dev
         # OmniAuth.config.on_failure = Proc.new { |env|
@@ -34,6 +47,17 @@ class Grubalub < Sinatra::Base
 		use OmniAuth::Builder do
             provider :google_oauth2, ENV["GOOGLE_KEY"], ENV["GOOGLE_SECRET"]
         end
+
+        connection_string=ENV['MONGOHQ_URL']
+		raise "Missing required MONGOHQ_URL env variable for db connection" unless connection_string
+
+		connection_uri=URI.parse(connection_string)
+		db_name=connection_uri.path.gsub(/^\//, '')
+		db_host=connection_uri.host
+		db_port=connection_uri.port
+		db_user=connection_uri.user
+		db_password=connection_uri.password
+		Mongooz.defaults :host=>db_host, :port=>db_port, :db=>db_name, :user=>db_user, :password=>db_password
 	end
 
 	helpers do
@@ -61,47 +85,35 @@ class Grubalub < Sinatra::Base
 		raise "there was a login error: #{error_msg}"
 	end
 
-	# post "/login/:type" do
-	# 	auth_endpoint=nil
-	# 	case params[:type]
-	# 	when "google"
-	# 		auth_endpoint="/auth/google_oauth2"
-	# 	when "developer"
-	# 		auth_endpoint="/auth/developer"
-	# 	else
-	# 		raise "unrecognized auth type #{params[:type]}"
-	# 	end
-
-	# 	redirect to(auth_endpoint)
-	# end
-
 	route :get, :post, '/auth/:provider/callback' do
 
         auth_hash=request.env['omniauth.auth']
-        if auth_hash.nil?
-            status 500
-            halt haml(:error, :locals=>{:msg=>"Missing required omniauth.auth hash"})
+        unless auth_hash
+            @error_msg="Missing required omniauth.auth hash"
+            halt 500, haml(:error)
         end
         
         info_hash=auth_hash[:info]
         unless info_hash
-            status 500
-            halt haml(:error, :locals=>{:mst=>"Failed to retrieve info hash from auth hash"})
+        	@error_msg="Failed to retrieve info hash from auth hash"
+            halt 500, haml(:error)
         end
 
         user_name=info_hash[:name]
         user_email=info_hash[:email]
-        if user_name.nil? || user_email.nil?
-            status 500
-            halt haml(:error, :locals=>{:msg=>"Failed to retrieve info.name and/or info.email from info hash"})
+        unless user_name && user_email
+            @error_msg="Failed to retrieve info.name and/or info.email from info hash"
+            halt 500, haml(:error)
         end
 
         puts "User is #{user_name} and email is #{user_email}"
-        # unless login(user_name,user_email)
-        #     status 401
-        #     halt haml(:error, :locals=>{:msg=>"Login failed for #{user_name} (#{user_email}) - are you on the list!?"})
-        # end
+        user_list=Users.db_query({:email=>user_email, :name=>user_name})
+        raise "Unrecognized user: #{user_name}" unless user_list && user_list.length>0
 
+        user=user_list[0]
+        raise "Access denied" unless user.is_admin?
+
+        login(user)
         redirect to("/")
     end
 
