@@ -1,0 +1,9 @@
+.container
+	%h1 i'm the login page
+
+-if settings.development?
+	%form{:method=>"get", :action=>"#{url('/auth/developer')}"}
+		%button{:type=>"submit"} Dev Login
+
+%form{:method=>"get",:action=>"#{url('/auth/google_oauth2')}"}
+	%button{:type=>"submit"} Google Login
