@@ -1,10 +1,11 @@
-%h1 Login
 
+.container{:style=>"margin-top:20px;"}
 -if settings.development?
 	%form{:method=>"get", :action=>"#{url('/auth/developer')}"}
-		%button{:type=>"submit"} ... in dev mode!
+		%button{:type=>"submit", :style=>"padding:10px;"} Login with dev mode!
 -else
 	%form{:method=>"get",:action=>"#{url('/auth/google_oauth2')}"}
-		%button{:type=>"submit"} ... with Google
+		%button{:type=>"submit", :style=>"padding:10px;"} Login with Google
 
-%a{:href=>"/"} Back to homepage
+.container{:style=>"margin-top:20px;"}
+	%a{:href=>"/"} Back to homepage
