@@ -1,0 +1,31 @@
+
+%h1.center Food Insert
+
+#new-food-view
+	#new-food-general-view
+	#new-food-nutrition-view
+	#new-food-ingredient-view
+	%button.save{:type=>"button"} Save
+
+#new-food-templates
+	%script#new-food-general-template{:type=>"text/template"}
+		%h2 General Food Info
+
+	%script#new-food-nutrition-template{:type=>"text/template"}
+		%h2
+			Nutritional Info
+			%button.add-nutrition{:type=>"button"} +
+
+	%script#new-food-ingredient-template{:type=>"text/template"}
+		%h2 Ingredients
+
+	%script#new-food-nutrition-model-template{:type=>"text/template"}
+		.validation-errors
+		%input.amount{:type=>"text", :placeholder=>"16g"}
+		%input.name{:type=>"text", :placeholder=>"protein"}
+		%button.remove{:type=>"button"} -
+
+%script{:src=>"/js/underscore-1.5.2.min.js"}
+%script{:src=>"/js/handlebars-v1.1.2.js"}
+%script{:src=>"/js/backbone-1.1.0.min.js"}
+%script{:src=>"/js/food-create.js"}

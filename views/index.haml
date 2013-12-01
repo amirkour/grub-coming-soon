@@ -8,4 +8,8 @@
 		%div
 			coming
 			%span soon
-	
+
+#body
+	-if @user && @user.is_admin?
+		%h3 Welcome #{@user.name}
+		%a{:href=>"/new/food"} New Food

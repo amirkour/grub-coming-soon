@@ -135,7 +135,13 @@ class Grubalub < Sinatra::Base
 	end
 
 	get "/" do
-		puts "is debugging working?"
+		@user=logged_in_user
 		haml :index
+	end
+
+	get "/new/food" do
+		@user=logged_in_user
+		raise "Unauthorized Access" unless @user && @user.is_admin?
+		haml :"food-create"
 	end
 end

@@ -10,6 +10,7 @@ body{
 img{
 	max-width: 100%;
 }
+.center{text-align:center;}
 
 .nav-bar{
 	background-color:$grub-grey-blue;
@@ -80,7 +81,6 @@ img{
 	width: 100%;
 }
 #everything.nav-open{
-	
 	left:$nav-width;
 }
 
