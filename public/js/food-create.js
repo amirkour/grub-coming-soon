@@ -17,8 +17,8 @@
 
 			var composites=this.get("composites");
 			if(composites){
-				if(composites.hasDupes()) return "Composites have dupes";
-				if(!composites.isValid()) return "Composites are invalid";
+				if(composites.hasDupes()) return "Composite ingredients cannot have dupes";
+				if(!composites.isValid()) return "Composites ingredients are invalid";
 			}
 		}
 	});
@@ -94,14 +94,6 @@
 			this.set("nutritionCollection",new NutritionCollection());
 			this.set("ingredientCollection",new IngredientCollection());
 		},
-		// toJSON: function(){
-		// 	pJson=$.extend(Backbone.Model.prototype.toJSON.call(this), {
-		// 		nutritionCollection: this.nutritionCollection.toJSON(),
-		// 		ingredientCollection: this.ingredientCollection.toJSON()
-		// 	});
-
-		// 	return pJson;
-		// },
 		validate:function(){
 			var name=this.get("name");
 			if(!name) return "Food name cannot be null";
@@ -149,12 +141,12 @@
 		},
 		compositeAdded:function(model, collection, options){
 			var view=new IngredientModelView({model: model});
-			this.$listUl.append(view.render().$el);
+			this.$listOl.append(view.render().$el);
 		},
 		initTwoWayBindings:function(){
 			this.$addButton=this.$el.find(".add");
 			this.$nameInput=this.$el.find(".name");
-			this.$listUl=this.$el.find(".composites");
+			this.$listOl=this.$el.find(".composites");
 			this.$errorDiv=this.$el.find(".validation-errors");
 		},
 		render:function(){
@@ -183,11 +175,11 @@
 		},
 		ingredientAdded:function(model, collection, options){
 			var view=new IngredientModelView({model:model});
-			this.$listUl.append(view.render().$el);
+			this.$listOl.append(view.render().$el);
 		},
 		initTwoWayBindings:function(){
 			this.$errorDiv=this.$el.find(".validation-errors");
-			this.$listUl=this.$el.find(".list");
+			this.$listOl=this.$el.find(".list");
 			this.$nameInput=this.$el.find(".name");
 			this.$addButton=this.$el.find(".add");
 		},
@@ -199,59 +191,16 @@
 	});
 
 	var NutritionModelView=Backbone.View.extend({
+		tagName:"li",
 		template: Handlebars.compile($templates.find("#new-food-nutrition-model-template").html()),
-		initialize: function(options){
-			this.listenTo(this.model, "invalid", this.renderInvalidModelError);
-		},
 		events:{
-			"keyup .amount": function(e){
-				if(e.which===13){
-					this.$nameInput.focus();
-					return;
-				}
-
-				this.model.set("amount", e.target.value);
-			},
-			"keyup .name": function(e){
-				if(e.which===13){
-					this.$addButton.click();
-					return;
-				}
-
-				this.model.set("name", e.target.value);
-			},
-			"click .remove": function(e){
+			"click .remove":function(e){
 				this.model.collection.remove(this.model);
 				this.remove();
-			},
-			"click .add": function(e){
-				this.clearErrors();
-				if(!this.model.isValid()){
-					this.focus();
-					return;
-				}
-
-				this.model.collection.add(new NutritionModel());
 			}
-		},
-		focus:function(){
-			this.$amountInput.focus();
-		},
-		clearErrors: function(){
-			this.$errorDiv.empty();
-		},
-		initTwoWayBindings:function(){
-			this.$errorDiv=this.$el.find(".validation-errors");
-			this.$amountInput=this.$el.find(".amount");
-			this.$nameInput=this.$el.find(".name");
-			this.$addButton=this.$el.find(".add");
-		},
-		renderInvalidModelError:function(model, error, options){
-			this.$errorDiv.html(error);
 		},
 		render:function(){
 			this.$el.html(this.template(this.model.toJSON()));
-			this.initTwoWayBindings();
 			return this;
 		}
 	});
@@ -260,28 +209,37 @@
 		template: Handlebars.compile($templates.find("#new-food-nutrition-template").html()),
 		initialize:function(){
 			this.listenTo(this.collection, "add", this.appendNewNutritionView);
-			this.listenTo(this.collection, "remove", this.nutritionWasRemoved);
 		},
 		events:{
-			"click .add-nutrition": function(e){
-				this.collection.add(new NutritionModel());
+			"keyup .amount":function(e){
+				if(e.target.value==='') return;
+				if(e.which===13) this.$inputName.focus();
+			},
+			"keyup .name":function(e){
+				if(e.target.value==='') return;
+				if(e.which===13) this.$addButton.click();
+			},
+			"click .add":function(e){
+				var amount=this.$inputAmount.val();
+				var name=this.$inputName.val();
+				if(!amount || !name) return;
+
+				this.collection.add(new NutritionModel({name:name, amount:amount}));
+
+				this.$inputAmount.val('');
+				this.$inputName.val('');
+				this.$inputAmount.focus();
 			}
 		},
 		appendNewNutritionView: function(model,collection,options){
-			var newView=new NutritionModelView({model:model});
-			this.$el.append(newView.render().$el);
-			this.$addButton.hide();
-			newView.focus();
-		},
-		nutritionWasRemoved: function(model, collection, options){
-			if(this.collection.length <= 0) this.$addButton.show();
-		},
-		clearErrors:function(){
-			this.$errorDiv.empty();
+			var view=new NutritionModelView({model:model});
+			this.$listOl.append(view.render().$el);
 		},
 		initTwoWayBindings:function(){
-			this.$errorDiv=this.$el.find(".validation-errors");
-			this.$addButton=this.$el.find(".add-nutrition");
+			this.$addButton=this.$el.find(".add");
+			this.$listOl=this.$el.find(".list");
+			this.$inputAmount=this.$el.find(".amount");
+			this.$inputName=this.$el.find(".name");
 		},
 		render: function(){
 			this.$el.html(this.template());

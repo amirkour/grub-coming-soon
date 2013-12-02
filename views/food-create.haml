@@ -14,10 +14,15 @@
 		%input.name{:type=>"text",:placeholder=>"name of food"}
 
 	%script#new-food-nutrition-template{:type=>"text/template"}
-		%h2
-			Nutritional Info
-			%button.add-nutrition{:type=>"button"} +
-		.validation-errors
+		%h2 Nutritional Info
+		%input.amount{:type=>"text",:placeholder=>"9g, 100, 20g, etc"}
+		%input.name{:type=>"text",:placeholder=>"protein, calories, fat, etc"}
+		%button.add{:type=>"button"} +
+		%ol.list
+
+	%script#new-food-nutrition-model-template{:type=>"text/template"}
+		({{amount}}) {{name}}
+		%button.remove{:type=>"button"} -
 
 	%script#new-food-ingredient-template{:type=>"text/template"}
 		%h2 Ingredients
@@ -25,13 +30,6 @@
 		%input.name{:type=>"text",:placeholder=>"new ingredient name"}
 		%button.add{:type=>"button"} +
 		%ol.list
-
-	%script#new-food-nutrition-model-template{:type=>"text/template"}
-		.validation-errors
-		%input.amount{:type=>"text", :placeholder=>"16g"}
-		%input.name{:type=>"text", :placeholder=>"protein"}
-		%button.remove{:type=>"button"} -
-		%button.add{:type=>"button"} +
 
 	%script#new-food-ingredient-model-template{:type=>"text/template"}
 		{{name}}
