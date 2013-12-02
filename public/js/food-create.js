@@ -9,14 +9,16 @@
 			composites:null
 		},
 		initialize:function(options){
-			this.composites=new IngredientCollection();
+			this.set("composites", new IngredientCollection());
 		},
 		validate:function(){
 			var name=this.get("name");
 			if(!name) return "Ingredient name cannot be blank";
-			if(this.composites){
-				if(this.composites.hasDupes()) return "Composites for ingredient " + name + " has dupes";
-				if(!this.composites.isValid()) return "Composites for ingredient " + name + " are invalid";
+
+			var composites=this.get("composites");
+			if(composites){
+				if(composites.hasDupes()) return "Composites have dupes";
+				if(!composites.isValid()) return "Composites are invalid";
 			}
 		}
 	});
@@ -122,7 +124,7 @@
 		tagName:"li",
 		template: Handlebars.compile($templates.find("#new-food-ingredient-model-template").html()),
 		initialize:function(options){
-			this.listenTo(this.model.composites,"add",this.compositeAdded);
+			this.listenTo(this.model.get("composites"),"add",this.compositeAdded);
 			this.listenTo(this.model,"invalid",this.showInvalidModelError);
 		},
 		events:{
@@ -138,7 +140,7 @@
 				if(newCompositeName==='') return;
 
 				var newComposite=new IngredientModel({name: newCompositeName});
-				this.model.composites.add(newComposite);
+				this.model.get("composites").add(newComposite);
 				this.$nameInput.val('').focus();
 			}
 		},
