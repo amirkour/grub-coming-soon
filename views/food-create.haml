@@ -6,6 +6,7 @@
 	#new-food-nutrition-view
 	#new-food-ingredient-view
 	%button.save{:type=>"button"} Save
+	%ul.food-save-error
 
 #new-food-templates
 	%script#new-food-general-template{:type=>"text/template"}
@@ -15,6 +16,7 @@
 		%h2
 			Nutritional Info
 			%button.add-nutrition{:type=>"button"} +
+		.validation-errors
 
 	%script#new-food-ingredient-template{:type=>"text/template"}
 		%h2 Ingredients
@@ -24,6 +26,7 @@
 		%input.amount{:type=>"text", :placeholder=>"16g"}
 		%input.name{:type=>"text", :placeholder=>"protein"}
 		%button.remove{:type=>"button"} -
+		%button.add{:type=>"button"} +
 
 %script{:src=>"/js/underscore-1.5.2.min.js"}
 %script{:src=>"/js/handlebars-v1.1.2.js"}
