@@ -24,15 +24,19 @@
 	});
 	var NutritionModel=Backbone.Model.extend({
 		defaults:{
-			name: null,		// "Protein"
-			amount: null 	// "16g"
+			calories: null,
+			total_fat: null,
+			sat_fat:null,
+			cholesterol:null,
+			sodium:null,
+			potassium:null,
+			total_carbs:null,
+			fiber:null,
+			sugar:null,
+			protein:null
 		},
 		validate: function(attributes, options){
-			var amount=this.get("amount");
-			var name=this.get("name");
-			if(amount && name) return;
-
-			return "Nutritions must have an amount and name";
+			//todo - do i need this?
 		}
 	});
 	var IngredientCollection=Backbone.Collection.extend({
@@ -56,28 +60,6 @@
 			});
 			return invalid==null;
 		}
-	})
-	var NutritionCollection=Backbone.Collection.extend({
-		model: NutritionModel,
-		hasDupes:function(){
-			var seen={};
-			dupe=this.find(function(nutrition){
-				var name=nutrition.get("name");
-				if(!name) return false;
-				if(seen[name]) return true;
-
-				seen[name]=1;
-				return false;
-			});
-
-			return dupe!=null;
-		},
-		isValid:function(){
-			var invalid=this.find(function(nutrition){
-				return nutrition.isValid()===false;
-			});
-			return invalid==null;
-		}
 	});
 
 	// todo - this is more like a view model.
@@ -86,28 +68,27 @@
 	var FoodModel=Backbone.Model.extend({
 		defaults:{
 			name: null,
-			nutritionCollection: null,
-			ingredientCollection: null
+			nutrition: null,
+			ingredients: null
 		},
 		url:"/foo/bar",
 		initialize: function(options){
-			this.set("nutritionCollection",new NutritionCollection());
-			this.set("ingredientCollection",new IngredientCollection());
+			this.set("nutrition",new NutritionModel());
+			this.set("ingredients",new IngredientCollection());
 		},
 		validate:function(){
 			var name=this.get("name");
 			if(!name) return "Food name cannot be null";
 
-			var nutritionCollection=this.get("nutritionCollection");
-			if(nutritionCollection){
-				if(!nutritionCollection.isValid()) return "There are invalid Nutrition elements";
-				if(nutritionCollection.hasDupes()) return "There are duplicate Nutrition elements";
+			var nutrition=this.get("nutrition");
+			if(nutrition){
+				if(!nutrition.isValid()) return "There are invalid Nutrition elements";
 			}
 
-			var ingredientCollection=this.get("ingredientCollection");
-			if(ingredientCollection){
-				if(!ingredientCollection.isValid()) return "There are invalid Ingredients";
-				if(ingredientCollection.hasDupes()) return "There are duplicate Ingredients";
+			var ingredients=this.get("ingredients");
+			if(ingredients){
+				if(!ingredients.isValid()) return "There are invalid Ingredients";
+				if(ingredients.hasDupes()) return "There are duplicate Ingredients";
 			}
 		}
 	});
@@ -190,59 +171,84 @@
 		}
 	});
 
-	var NutritionModelView=Backbone.View.extend({
-		tagName:"li",
-		template: Handlebars.compile($templates.find("#new-food-nutrition-model-template").html()),
-		events:{
-			"click .remove":function(e){
-				this.model.collection.remove(this.model);
-				this.remove();
-			}
-		},
-		render:function(){
-			this.$el.html(this.template(this.model.toJSON()));
-			return this;
-		}
-	});
 	var NutritionView=Backbone.View.extend({
 		el: "#new-food-nutrition-view",
 		template: Handlebars.compile($templates.find("#new-food-nutrition-template").html()),
-		initialize:function(){
-			this.listenTo(this.collection, "add", this.appendNewNutritionView);
-		},
 		events:{
-			"keyup .amount":function(e){
+			"keyup .calories":function(e){
+				if(e.which===13) this.$total_fat.focus();
 				if(e.target.value==='') return;
-				if(e.which===13) this.$inputName.focus();
+
+				this.model.set("calories", e.target.value);
 			},
-			"keyup .name":function(e){
+			"keyup .total_fat":function(e){
+				if(e.which===13) this.$sat_fat.focus();
 				if(e.target.value==='') return;
-				if(e.which===13) this.$addButton.click();
+
+				this.model.set("total_fat",e.target.value);
 			},
-			"click .add":function(e){
-				var amount=this.$inputAmount.val();
-				var name=this.$inputName.val();
-				if(!amount || !name) return;
+			"keyup .sat_fat":function(e){
+				if(e.which===13) this.$cholesterol.focus();
+				if(e.target.value==='') return;
 
-				this.collection.add(new NutritionModel({name:name, amount:amount}));
+				this.model.set("sat_fat",e.target.value);
+			},
+			"keyup .cholesterol":function(e){
+				if(e.which===13) this.$sodium.focus();
+				if(e.target.value==='') return;
 
-				this.$inputAmount.val('');
-				this.$inputName.val('');
-				this.$inputAmount.focus();
+				this.model.set("cholesterol",e.target.value);
+			},
+			"keyup .sodium":function(e){
+				if(e.which===13) this.$potassium.focus();
+				if(e.target.value==='') return;
+
+				this.model.set("sodium",e.target.value);
+			},
+			"keyup .potassium":function(e){
+				if(e.which===13) this.$total_carbs.focus();
+				if(e.target.value==='') return;
+
+				this.model.set("potassium",e.target.value);
+			},
+			"keyup .total_carbs":function(e){
+				if(e.which===13) this.$fiber.focus();
+				if(e.target.value==='') return;
+
+				this.model.set("total_carbs",e.target.value);
+			},
+			"keyup .fiber":function(e){
+				if(e.which===13) this.$sugar.focus();
+				if(e.target.value==='') return;
+
+				this.model.set("fiber",e.target.value);
+			},
+			"keyup .sugar":function(e){
+				if(e.which===13) this.$protein.focus();
+				if(e.target.value==='') return;
+
+				this.model.set("sugar",e.target.value);
+			},
+			"keyup .protein":function(e){
+				if(e.target.value==='') return;
+
+				this.model.set("protein",e.target.value);
 			}
 		},
-		appendNewNutritionView: function(model,collection,options){
-			var view=new NutritionModelView({model:model});
-			this.$listOl.append(view.render().$el);
-		},
 		initTwoWayBindings:function(){
-			this.$addButton=this.$el.find(".add");
-			this.$listOl=this.$el.find(".list");
-			this.$inputAmount=this.$el.find(".amount");
-			this.$inputName=this.$el.find(".name");
+			this.$calories=this.$el.find(".calories");
+			this.$total_fat=this.$el.find(".total_fat");
+			this.$sat_fat=this.$el.find(".sat_fat");
+			this.$cholesterol=this.$el.find(".cholesterol");
+			this.$sodium=this.$el.find(".sodium");
+			this.$potassium=this.$el.find(".potassium");
+			this.$total_carbs=this.$el.find(".total_carbs");
+			this.$fiber=this.$el.find(".fiber");
+			this.$sugar=this.$el.find(".sugar");
+			this.$protein=this.$el.find(".protein");
 		},
 		render: function(){
-			this.$el.html(this.template());
+			this.$el.html(this.template(this.model.toJSON()));
 			this.initTwoWayBindings();
 			return this;
 		}
@@ -266,8 +272,8 @@
 		el: "#new-food-view",
 		initialize: function(options){
 			this.viewGeneral=new GeneralFoodView({model: this.model});
-			this.viewNutritions=new NutritionView({collection: this.model.get("nutritionCollection")});
-			this.viewIngredients=new IngredientView({collection: this.model.get("ingredientCollection")});
+			this.viewnutrition=new NutritionView({model: this.model.get("nutrition")});
+			this.viewIngredients=new IngredientView({collection: this.model.get("ingredients")});
 
 			this.listenTo(this.model,"invalid",this.showInvalidModelError);
 		},
@@ -297,7 +303,7 @@
 		},
 		render: function(){
 			this.viewGeneral.render();
-			this.viewNutritions.render();
+			this.viewnutrition.render();
 			this.viewIngredients.render();
 
 			this.initTwoWayBindings();

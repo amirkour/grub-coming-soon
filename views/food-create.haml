@@ -14,15 +14,48 @@
 		%input.name{:type=>"text",:placeholder=>"name of food"}
 
 	%script#new-food-nutrition-template{:type=>"text/template"}
-		%h2 Nutritional Info
-		%input.amount{:type=>"text",:placeholder=>"9g, 100, 20g, etc"}
-		%input.name{:type=>"text",:placeholder=>"protein, calories, fat, etc"}
-		%button.add{:type=>"button"} +
-		%ol.list
-
-	%script#new-food-nutrition-model-template{:type=>"text/template"}
-		({{amount}}) {{name}}
-		%button.remove{:type=>"button"} -
+		%h2 Nutritional Facts
+		%table
+			%tr
+				%td Calories
+				%td
+					%input.calories{:type=>"text",:placeholder=>"calories",:value=>"{{calories}}"}
+			%tr
+				%td Total Fat
+				%td
+					%input.total_fat{:type=>"text",:placeholder=>"total fat",:value=>"{{total_fat}}"}
+			%tr
+				%td Sat. Fat
+				%td
+					%input.sat_fat{:type=>"text",:placeholder=>"sat. fat",:value=>"{{sat_fat}}"}
+			%tr
+				%td Cholesterol
+				%td
+					%input.cholesterol{:type=>"text",:placeholder=>"cholesterol",:value=>"{{cholesterol}}"}
+			%tr
+				%td Sodium
+				%td
+					%input.sodium{:type=>"text",:placeholder=>"sodium",:value=>"{{sodium}}"}
+			%tr
+				%td Potassium
+				%td
+					%input.potassium{:type=>"text",:placeholder=>"potassium",:value=>"{{potassium}}"}
+			%tr
+				%td Total Carbs
+				%td
+					%input.total_carbs{:type=>"text",:placeholder=>"total_carbs",:value=>"{{total_carbs}}"}
+			%tr
+				%td Fiber
+				%td
+					%input.fiber{:type=>"text",:placeholder=>"fiber",:value=>"{{fiber}}"}
+			%tr
+				%td Sugar
+				%td
+					%input.sugar{:type=>"text",:placeholder=>"sugar",:value=>"{{sugar}}"}
+			%tr
+				%td Protein
+				%td
+					%input.protein{:type=>"text",:placeholder=>"protein",:value=>"{{protein}}"}
 
 	%script#new-food-ingredient-template{:type=>"text/template"}
 		%h2 Ingredients
@@ -33,10 +66,10 @@
 
 	%script#new-food-ingredient-model-template{:type=>"text/template"}
 		{{name}}
+		%button.remove{:type=>"button"} -
 		.validation-errors
 		%input.name{:type=>"text",:placeholder=>"new composite name"}
 		%button.add{:type=>"button"} +
-		%button.remove{:type=>"button"} -
 		%ol.composites
 
 %script{:src=>"/js/underscore-1.5.2.min.js"}
