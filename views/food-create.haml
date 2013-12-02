@@ -11,6 +11,7 @@
 #new-food-templates
 	%script#new-food-general-template{:type=>"text/template"}
 		%h2 General Food Info
+		%input.name{:type=>"text",:placeholder=>"name of food"}
 
 	%script#new-food-nutrition-template{:type=>"text/template"}
 		%h2
@@ -20,6 +21,10 @@
 
 	%script#new-food-ingredient-template{:type=>"text/template"}
 		%h2 Ingredients
+		.validation-errors
+		%input.name{:type=>"text",:placeholder=>"new ingredient name"}
+		%button.add{:type=>"button"} +
+		%ol.list
 
 	%script#new-food-nutrition-model-template{:type=>"text/template"}
 		.validation-errors
@@ -27,6 +32,14 @@
 		%input.name{:type=>"text", :placeholder=>"protein"}
 		%button.remove{:type=>"button"} -
 		%button.add{:type=>"button"} +
+
+	%script#new-food-ingredient-model-template{:type=>"text/template"}
+		{{name}}
+		.validation-errors
+		%input.name{:type=>"text",:placeholder=>"new composite name"}
+		%button.add{:type=>"button"} +
+		%button.remove{:type=>"button"} -
+		%ol.composites
 
 %script{:src=>"/js/underscore-1.5.2.min.js"}
 %script{:src=>"/js/handlebars-v1.1.2.js"}

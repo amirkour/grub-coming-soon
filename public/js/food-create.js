@@ -7,6 +7,17 @@
 		defaults:{
 			name:null,
 			composites:null
+		},
+		initialize:function(options){
+			this.composites=new IngredientCollection();
+		},
+		validate:function(){
+			var name=this.get("name");
+			if(!name) return "Ingredient name cannot be blank";
+			if(this.composites){
+				if(this.composites.hasDupes()) return "Composites for ingredient " + name + " has dupes";
+				if(!this.composites.isValid()) return "Composites for ingredient " + name + " are invalid";
+			}
 		}
 	});
 	var NutritionModel=Backbone.Model.extend({
@@ -78,34 +89,109 @@
 		},
 		url:"/foo/bar",
 		initialize: function(options){
-			this.nutritionCollection=new NutritionCollection();
-			this.ingredientCollection=new IngredientCollection();
+			this.set("nutritionCollection",new NutritionCollection());
+			this.set("ingredientCollection",new IngredientCollection());
 		},
-		toJSON: function(){
-			pJson=$.extend(Backbone.Model.prototype.toJSON.call(this), {
-				nutritionCollection: this.nutritionCollection.toJSON(),
-				ingredientCollection: this.ingredientCollection.toJSON()
-			});
+		// toJSON: function(){
+		// 	pJson=$.extend(Backbone.Model.prototype.toJSON.call(this), {
+		// 		nutritionCollection: this.nutritionCollection.toJSON(),
+		// 		ingredientCollection: this.ingredientCollection.toJSON()
+		// 	});
 
-			return pJson;
-		},
+		// 	return pJson;
+		// },
 		validate:function(){
 			var name=this.get("name");
 			if(!name) return "Food name cannot be null";
 
-			if(!this.nutritionCollection.isValid()) return "There are invalid Nutrition elements";
-			if(this.nutritionCollection.hasDupes()) return "There are duplicate Nutrition elements";
+			var nutritionCollection=this.get("nutritionCollection");
+			if(nutritionCollection){
+				if(!nutritionCollection.isValid()) return "There are invalid Nutrition elements";
+				if(nutritionCollection.hasDupes()) return "There are duplicate Nutrition elements";
+			}
 
-			if(!this.ingredientCollection.isValid()) return "There are invalid Ingredients";
-			if(this.ingredientCollection.hasDupes()) return "There are duplicate Ingredients";
+			var ingredientCollection=this.get("ingredientCollection");
+			if(ingredientCollection){
+				if(!ingredientCollection.isValid()) return "There are invalid Ingredients";
+				if(ingredientCollection.hasDupes()) return "There are duplicate Ingredients";
+			}
 		}
 	});
 
+	var IngredientModelView=Backbone.View.extend({
+		tagName:"li",
+		template: Handlebars.compile($templates.find("#new-food-ingredient-model-template").html()),
+		initialize:function(options){
+			this.listenTo(this.model.composites,"add",this.compositeAdded);
+			this.listenTo(this.model,"invalid",this.showInvalidModelError);
+		},
+		events:{
+			"click .remove":function(e){
+				this.model.collection.remove(this.model);
+				this.remove();
+			},
+			"keyup .name":function(e){
+				if(e.which===13) this.$addButton.click();
+			},
+			"click .add":function(e){
+				var newCompositeName=this.$nameInput.val();
+				if(newCompositeName==='') return;
+
+				var newComposite=new IngredientModel({name: newCompositeName});
+				this.model.composites.add(newComposite);
+				this.$nameInput.val('').focus();
+			}
+		},
+		showInvalidModelError:function(model, error, options){
+			this.$errorDiv.html(error);
+		},
+		compositeAdded:function(model, collection, options){
+			var view=new IngredientModelView({model: model});
+			this.$listUl.append(view.render().$el);
+		},
+		initTwoWayBindings:function(){
+			this.$addButton=this.$el.find(".add");
+			this.$nameInput=this.$el.find(".name");
+			this.$listUl=this.$el.find(".composites");
+			this.$errorDiv=this.$el.find(".validation-errors");
+		},
+		render:function(){
+			this.$el.html(this.template(this.model.toJSON()));
+			this.initTwoWayBindings();
+			return this;
+		}
+	});
 	var IngredientView=Backbone.View.extend({
 		el: "#new-food-ingredient-view",
 		template: Handlebars.compile($templates.find("#new-food-ingredient-template").html()),
+		initialize:function(options){
+			this.listenTo(this.collection,"add",this.ingredientAdded);
+		},
+		events:{
+			"keyup .name":function(e){
+				if(e.which===13) this.$addButton.click();
+			},
+			"click .add":function(e){
+				var newName=this.$nameInput.val();
+				if(newName==='') return;
+
+				this.collection.add(new IngredientModel({name:newName}));
+				this.$nameInput.val('').focus();
+			}
+		},
+		ingredientAdded:function(model, collection, options){
+			var view=new IngredientModelView({model:model});
+			this.$listUl.append(view.render().$el);
+		},
+		initTwoWayBindings:function(){
+			this.$errorDiv=this.$el.find(".validation-errors");
+			this.$listUl=this.$el.find(".list");
+			this.$nameInput=this.$el.find(".name");
+			this.$addButton=this.$el.find(".add");
+		},
 		render: function(){
 			this.$el.html(this.template());
+			this.initTwoWayBindings();
 			return this;
 		}
 	});
@@ -205,6 +291,11 @@
 	var GeneralFoodView=Backbone.View.extend({
 		el: "#new-food-general-view",
 		template: Handlebars.compile($templates.find("#new-food-general-template").html()),
+		events:{
+			"keyup .name":function(e){
+				this.model.set("name",e.target.value);
+			}
+		},
 		render: function(){
 			this.$el.html(this.template());
 			return this;
@@ -215,8 +306,8 @@
 		el: "#new-food-view",
 		initialize: function(options){
 			this.viewGeneral=new GeneralFoodView({model: this.model});
-			this.viewNutritions=new NutritionView({collection: this.model.nutritionCollection});
-			this.viewIngredients=new IngredientView({collection: this.model.ingredientCollection});
+			this.viewNutritions=new NutritionView({collection: this.model.get("nutritionCollection")});
+			this.viewIngredients=new IngredientView({collection: this.model.get("ingredientCollection")});
 
 			this.listenTo(this.model,"invalid",this.showInvalidModelError);
 		},
