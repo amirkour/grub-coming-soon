@@ -71,7 +71,7 @@
 			nutrition: null,
 			ingredients: null
 		},
-		url:"/foo/bar",
+		url:"/service/food",
 		initialize: function(options){
 			this.set("nutrition",new NutritionModel());
 			this.set("ingredients",new IngredientCollection());

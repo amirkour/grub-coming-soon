@@ -28,6 +28,7 @@ class Grubalub < Sinatra::Base
 
 	configure :development do
 		register Sinatra::Reloader
+		enable :logging
 		use OmniAuth::Builder do
 			provider :developer
         end
@@ -76,6 +77,12 @@ class Grubalub < Sinatra::Base
 		exception=env['sinatra.error']
 		@unexpected_error_msg=exception.respond_to?(:message) ? exception.message : "Unknown error"
 		haml :error
+	end
+
+	post "/service/food" do
+		food_params=JSON.parse(request.body.read)
+		logger.info("Received data: #{food_params}")
+		halt 401, json(food_params.to_json)
 	end
 
 	get '/auth/failure' do
